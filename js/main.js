@@ -28,12 +28,83 @@ function validarForm() {
     alert('Inscrito com Sucesso!');
   }
 
+  $(document).ready(function () {
+    $("#loginForm").on("submit", function (event) {
+        event.preventDefault(); // Previne envio padrão do formulário
+
+        const nome = $("#nome").val().trim();
+        const cpf = $("#cpf").val().trim();
+        const senha = $("#senha").val().trim();
+
+        let isValid = true;
+
+        // Validação do Nome
+        if (nome === "") {
+            showError("#nomeError", "O campo nome é obrigatório.");
+            isValid = false;
+        } else {
+            hideError("#nomeError");
+        }
+
+        // Validação do CPF
+        if (!validateCPF(cpf)) {
+            showError("#cpfError", "CPF inválido.");
+            isValid = false;
+        } else {
+            hideError("#cpfError");
+        }
+
+        // Validação da Senha
+        if (senha === "") {
+            showError("#senhaError", "O campo senha é obrigatório.");
+            isValid = false;
+        } else {
+            hideError("#senhaError");
+        }
+
+        // Se tudo for válido, redireciona para home.html
+        if (isValid) {
+            window.location.href = "home.html";
+        }
+    });
+
+    function showError(selector, message) {
+        $(selector).text(message).show();
+    }
+
+    function hideError(selector) {
+        $(selector).hide();
+    }
+
+    // Validador de CPF
+    function validateCPF(cpf) {
+        cpf = cpf.replace(/[^\d]/g, ""); // Remove caracteres não numéricos
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+        let soma = 0;
+        let resto;
+        for (let i = 1; i <= 9; i++) {
+            soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+        }
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+        soma = 0;
+        for (let i = 1; i <= 10; i++) {
+            soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        }
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        return resto === parseInt(cpf.substring(10, 11));
+    }
+});
+
 (function ($) {
 
     /*------------------
         Preloader
     --------------------*/
-    $(window).on('load', function () {
         $(".loader").fadeOut();
         $("#preloder").delay(200).fadeOut("slow");
 
@@ -48,7 +119,6 @@ function validarForm() {
             var containerEl = document.querySelector('.portfolio__gallery');
             var mixer = mixitup(containerEl);
         }
-    });
 
     /*------------------
         Background Set
