@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .redirect-button {
+            margin-top: 15px;
+            font-size: 1rem;
+            text-decoration: none;
+            color: #007BFF;
+            cursor: pointer;
+        }
+        .redirect-button:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body class="loginArea">
+    <div class="login-container">
+        <h1 class="titleForm">Login</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="cpf">CPF:</label>
+                <input class="inputForm" type="text" id="cpf" name="cpf" placeholder="Digite seu CPF">
+                <span class="error-message" id="cpfError"></span>
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input class="inputForm" type="password" id="senha" name="senha" placeholder="Digite sua senha">
+                <span class="error-message" id="senhaError"></span>
+            </div>
+            <button class="submitForm" type="button" id="entrar">Entrar</button>
+        </form>
+        <div id="feedbackMessage" class="feedback"></div>
+        <a href="index.html" class="redirect-button">Ainda não tem cadastro? Cadastre-se aqui</a>
+    </div>
+    <script>
+        document.getElementById('entrar').addEventListener('click', function () {
+            const cpf = document.getElementById('cpf').value;
+            const senha = document.getElementById('senha').value;
+            const feedbackMessage = document.getElementById('feedbackMessage');
+
+            // Limpa mensagens anteriores
+            feedbackMessage.textContent = '';
+            feedbackMessage.className = 'feedback';
+
+            // Recuperar dados do localStorage
+            const savedCpf = localStorage.getItem('cpf');
+            const savedSenha = localStorage.getItem('senha');
+
+            if (cpf === savedCpf && senha === savedSenha) {
+                feedbackMessage.textContent = 'Login bem-sucedido!';
+                feedbackMessage.classList.add('success');
+
+                // Redireciona para a página home após um pequeno atraso
+                setTimeout(() => {
+                    window.location.href = "home.html";
+                }, 1000);
+            } else {
+                feedbackMessage.textContent = 'CPF ou senha inválidos!';
+                feedbackMessage.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>
